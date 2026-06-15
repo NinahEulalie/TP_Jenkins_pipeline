@@ -40,7 +40,7 @@ pipeline {
 
         stage('Deploy to Nexus') {
             steps {
-                bat 'mvn deploy'
+                bat 'mvn deploy --settings C:\\Users\\IavotraLaurencia\\.m2\\settings.xml'
             }
         }
     }
