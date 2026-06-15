@@ -15,13 +15,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                bat 'mvn clean package'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                sh """
+                bat """
                 mvn sonar:sonar \
                 -Dsonar.host.url=http://localhost:9000 \
                 -Dsonar.login=admin \
@@ -32,7 +32,7 @@ pipeline {
 
         stage('Deploy to Nexus') {
             steps {
-                sh 'mvn deploy'
+                bat 'mvn deploy'
             }
         }
     }
