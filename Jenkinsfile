@@ -1,25 +1,38 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven3'
+    }
+
     stages {
+
         stage('Checkout') {
             steps {
-                echo 'Cloning repository...'
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Compiling Java file...'
-                sh 'javac HelloWorld.java'
+                sh 'mvn clean package'
             }
         }
 
-        stage('Run') {
+        stage('SonarQube Analysis') {
             steps {
-                echo 'Running program...'
-                sh 'java HelloWorld'
+                sh """
+                mvn sonar:sonar \
+                -Dsonar.host.url=http://localhost:9000 \
+                -Dsonar.login=admin \
+                -Dsonar.projectKey=hello-jenkins
+                """
+            }
+        }
+
+        stage('Deploy to Nexus') {
+            steps {
+                sh 'mvn deploy'
             }
         }
     }
