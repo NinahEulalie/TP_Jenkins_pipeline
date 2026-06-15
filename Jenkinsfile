@@ -21,12 +21,20 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                bat """
-                mvn sonar:sonar \
-                -Dsonar.host.url=http://localhost:9000 \
-                -Dsonar.login=admin \
-                -Dsonar.projectKey=hello-jenkins
-                """
+                withCredentials([
+                    string(
+                    credentialsId: 'sonar-token',
+                    variable: 'SONAR_TOKEN'
+                    )
+                ]) {
+
+                    bat """
+                    mvn sonar:sonar ^
+                    -Dsonar.host.url=http://localhost:9000 ^
+                    -Dsonar.token=%SONAR_TOKEN% ^
+                    -Dsonar.projectKey=hello-jenkins
+                    """
+                }
             }
         }
 
